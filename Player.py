@@ -30,6 +30,18 @@ class Player(pygame.sprite.Sprite):
     def collide_with_walls(self):
         for sprite in self.game.walls:
             if pygame.Rect(self.x + self.vx * self.game.dt, self.y + self.vy * self.game.dt, TILE, TILE).colliderect(sprite):
+                if self.vx > 0:
+                    self.x = sprite.x - TILE
+                    self.vx = 0
+                elif self.vx < 0:
+                    self.x = sprite.x + TILE
+                    self.vx = 0
+                if self.vy > 0:
+                    self.y = sprite.y - TILE
+                    self.vy = 0
+                elif self.vy < 0:
+                    self.y = sprite.y + TILE
+                    self.vy = 0
                 return True
 
     def collide_with_item(self):
