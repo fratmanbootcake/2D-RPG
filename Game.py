@@ -38,7 +38,6 @@ class Game:
     def new(self):
         self.all_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
-        self.floor = pygame.sprite.Group()
         self.map = Map("map.txt")
         self.load_map()
         self.camera = Camera(self.map.width, self.map.height)
