@@ -33,11 +33,16 @@ class Game:
                     self.walls.add(wall)
                 elif self.map.data[j][i] == 'p':
                     self.player = Player(self, i, j)
-                    self.all_sprites.add(self.player) 
+                    self.all_sprites.add(self.player)
+                elif self.map.data[j][i] == 'M':
+                    monster = Monster(self, i, j)
+                    self.all_sprites.add(monster)
+                    self.monsters.add(monster)
                     
     def new(self):
         self.all_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
+        self.monsters = pygame.sprite.Group()
         self.map = Map("map.txt")
         self.load_map()
         self.camera = Camera(self.map.width, self.map.height)
