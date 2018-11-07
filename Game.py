@@ -50,6 +50,9 @@ class Game:
     def update(self):
         self.all_sprites.update()
         self.camera.update(self.player)
+       
+    def animate(self, dt):
+        self.player.animate(dt)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE):
@@ -94,6 +97,7 @@ class Game:
             self.events()
             if self.state == RUNNING:
                 self.update()
+                self.animate(self.dt)
                 self.draw()
             elif self.state == PAUSED:
                 self.draw_pause()
