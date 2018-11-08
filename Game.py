@@ -6,6 +6,7 @@ from Player import *
 from Camera import *
 from Walls import *
 from Map import *
+from Animation import *
 
 class Game:
 
@@ -49,6 +50,7 @@ class Game:
         self.map = Map("map.txt")
         self.load_map()
         self.camera = Camera(self.map.width, self.map.height)
+        self.animator = Animation(self)
 
     def update(self):
         self.all_sprites.update()
