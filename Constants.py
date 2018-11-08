@@ -15,6 +15,9 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
+game_folder = os.path.dirname(__file__)
+image_folder = os.path.join(game_folder, "images")
+
 PLAYER_SPEED = 360
 WALKING = 'WALKING'
 STANDING = 'STANDING'
