@@ -36,35 +36,6 @@ class Player(pygame.sprite.Sprite):
             image.set_colorkey(pygame.Color('#f6ffff'))
         self.image = self.images[self.animation_index]
 
-    def animate(self, dt):
-        if self.state == WALKING:
-            self.timer += dt
-            while self.timer >= self.frame_duration:
-                self.timer -= self.frame_duration
-                self.animation_index += 1
-                south = self.animation_index % 3
-                west = (self.animation_index % 3) + 3
-                east = (self.animation_index % 3) + 6
-                north = (self.animation_index % 3) + 9
-                if self.facing == SOUTH:
-                    index = south
-                elif self.facing == WEST:
-                    index = west
-                elif self.facing == EAST:
-                    index = east
-                elif self.facing == NORTH:
-                    index = north
-                self.image = self.images[index]
-        elif self.state == STANDING:
-            if self.facing == SOUTH:
-                self.image = self.images[1]
-            elif self.facing == WEST:
-                self.image = self.images[4]
-            elif self.facing == EAST:
-                self.image = self.images[7]
-            elif self.facing == NORTH:
-                self.image = self.images[10]
-
     def handle_event(self):
         self.vx = 0
         self.vy = 0
