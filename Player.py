@@ -6,7 +6,11 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
         pygame.sprite.Sprite.__init__(self)
-        self.images = []
+        self.north_images = []
+        self.south_images = []
+        self.east_images = []
+        self.west_images = []
+        self.attacking_images = []
         self.animation_index = 0
         self.load_images()
         self.rect = self.image.get_rect()
@@ -20,21 +24,29 @@ class Player(pygame.sprite.Sprite):
         self.frame_duration = 50/1000
 
     def load_images(self):
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char01.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char02.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char03.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char04.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char05.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char06.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char07.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char08.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char09.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char10.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char11.png")).convert())
-        self.images.append(pygame.image.load(os.path.join(image_folder,"char12.png")).convert())
-        for image in self.images:
+        self.south_images.append(pygame.image.load(os.path.join(image_folder,"char01.png")).convert())
+        self.south_images.append(pygame.image.load(os.path.join(image_folder,"char02.png")).convert())
+        self.south_images.append(pygame.image.load(os.path.join(image_folder,"char03.png")).convert())
+        self.west_images.append(pygame.image.load(os.path.join(image_folder,"char04.png")).convert())
+        self.west_images.append(pygame.image.load(os.path.join(image_folder,"char05.png")).convert())
+        self.west_images.append(pygame.image.load(os.path.join(image_folder,"char06.png")).convert())
+        self.east_images.append(pygame.image.load(os.path.join(image_folder,"char07.png")).convert())
+        self.east_images.append(pygame.image.load(os.path.join(image_folder,"char08.png")).convert())
+        self.east_images.append(pygame.image.load(os.path.join(image_folder,"char09.png")).convert())
+        self.north_images.append(pygame.image.load(os.path.join(image_folder,"char10.png")).convert())
+        self.north_images.append(pygame.image.load(os.path.join(image_folder,"char11.png")).convert())
+        self.north_images.append(pygame.image.load(os.path.join(image_folder,"char12.png")).convert())
+        
+        for image in self.south_images:
             image.set_colorkey(pygame.Color('#f6ffff'))
-        self.image = self.images[self.animation_index]
+        for image in self.north_images:
+            image.set_colorkey(pygame.Color('#f6ffff'))
+        for image in self.east_images:
+            image.set_colorkey(pygame.Color('#f6ffff'))
+        for image in self.west_images:
+            image.set_colorkey(pygame.Color('#f6ffff'))
+
+        self.image = self.south_images[1]
 
     def handle_event(self):
         self.vx = 0
