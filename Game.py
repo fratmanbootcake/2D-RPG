@@ -56,7 +56,7 @@ class Game:
        
     def animate(self, dt):
         for sprite in self.animations:
-            self.animator.animate(sprite, dt)
+            self.animator.animate_sprite(sprite, dt)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE):
