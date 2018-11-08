@@ -34,15 +34,18 @@ class Game:
                 elif self.map.data[j][i] == 'p':
                     self.player = Player(self, i, j)
                     self.all_sprites.add(self.player)
+                    self.animations.add(self.player)
                 elif self.map.data[j][i] == 'M':
                     monster = Monster(self, i, j)
                     self.all_sprites.add(monster)
                     self.monsters.add(monster)
+                    self.animations.add(monster)
                     
     def new(self):
         self.all_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.monsters = pygame.sprite.Group()
+        self.animations = pygame.sprite.Group()
         self.map = Map("map.txt")
         self.load_map()
         self.camera = Camera(self.map.width, self.map.height)
@@ -52,7 +55,8 @@ class Game:
         self.camera.update(self.player)
        
     def animate(self, dt):
-        self.player.animate(dt)
+        for sprite in self.animations:
+            self.animator.animate_sprite(sprite, dt)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE):
