@@ -46,6 +46,7 @@ class Game:
                     
     def new(self):
         self.all_sprites = pygame.sprite.Group()
+        self.active_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.monsters = pygame.sprite.Group()
         self.animations = pygame.sprite.Group()
@@ -55,12 +56,21 @@ class Game:
         self.animator = Animation(self)
 
     def update(self):
+        self.add_active_sprites()
         self.all_sprites.update()
         self.camera.update(self.player)
        
     def animate(self, dt):
         for sprite in self.animations:
             self.animator.animate_sprite(sprite, dt)
+
+    def add_active_sprites(self):
+        self.active_sprites.empty()
+        for sprite in self.all_sprites:
+            sprite_offset = self.camera.offset(sprite)
+            if sprite_offset[0] >= 0 or sprite_offset[0] <= self.width:
+                if sprite_offset[1] >= 0 or sprite_offset[1] <= self.height:
+                    self.active_sprites.add(sprite)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE):
@@ -71,7 +81,7 @@ class Game:
     def draw(self):
         self.screen.fill(BLACK)
         self.draw_grid()
-        for sprite in self.all_sprites:
+        for sprite in self.active_sprites:
             self.screen.blit(sprite.image, self.camera.offset(sprite))
         pygame.display.flip()
 
