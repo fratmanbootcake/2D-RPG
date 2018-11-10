@@ -93,8 +93,6 @@ class Game:
                     pass # show inventory
                 elif event.key == pygame.K_c:
                     pass # show character info
-                elif event.key == pygame.K_SPACE:
-                    self.player.attacking = True
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
