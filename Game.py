@@ -41,6 +41,7 @@ class Game:
                     self.all_sprites.add(monster)
                     self.monsters.add(monster)
                     self.animations.add(monster)
+                    self.walls.add(monster)
                     
     def new(self):
         self.all_sprites = pygame.sprite.Group()
@@ -82,15 +83,23 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]:
-                pygame.quit()
-                sys.exit()
-            elif keys[pygame.K_p]:
-                if self.state == RUNNING:
-                    self.state = PAUSED
-                elif self.state == PAUSED:
-                    self.state = RUNNING
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    if self.state == RUNNING:
+                        self.state = PAUSED
+                    elif self.state == PAUSED:
+                        self.state = RUNNING
+                elif event.key == pygame.K_i:
+                    pass # show inventory
+                elif event.key == pygame.K_c:
+                    pass # show character info
+                elif event.key == pygame.K_SPACE:
+                    self.player.attacking = True
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            elif event.type == pygame.KEYUP:
+                pass
 
     def game_loop(self):
         self.create_window()
