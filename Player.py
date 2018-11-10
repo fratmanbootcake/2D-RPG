@@ -61,10 +61,6 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_DOWN]:
             self.vy = PLAYER_SPEED
 
-        #if self.vx != 0 and self.vy != 0:
-        #    self.vx = 0.7101 * self.vx
-        #    self.vy = 0.7101 * self.vy
-
     def update_facing(self):
         if self.vx > 0 and self.vy == 0:
             self.facing = EAST
