@@ -7,6 +7,7 @@ from Camera import *
 from Walls import *
 from Map import *
 from Animation import *
+from Monster import *
 
 class Game:
 
