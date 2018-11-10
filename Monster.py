@@ -1,5 +1,6 @@
 import pygame as pygame
 from Constants import *
+from Entity import *
 
 class Monster(Entity):
 
