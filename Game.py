@@ -8,6 +8,7 @@ from Walls import *
 from Map import *
 from Animation import *
 from Monster import *
+from Tiles import *
 
 class Game:
 
