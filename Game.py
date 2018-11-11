@@ -27,9 +27,28 @@ class Game:
         self.clock = pygame.time.Clock()
 
     def load_map(self):
+        #loads map tiles
         for j, row in enumerate(self.map.data):
             for i, column in enumerate(row):
                 if self.map.data[j][i] == '1':
+                    self.tiles.append(Water(self, i, j))
+                elif self.map.data[j][i] == '2':
+                    self.tiles.append(WaterBottom(self, i, j))
+                elif self.map.data[j][i] == '3':
+                    self.tiles.append(WaterTopRight2(self, i, j))
+                elif self.map.data[j][i] == '4':
+                    self.tiles.append(WaterLeft(self, i, j))
+                elif self.map.data[j][i] == '5':
+                    self.tiles.append(WaterBottomLeft(self, i, j))
+                elif self.map.data[j][i] == 'T' or self.map.data[j][i] == 't' :
+                    self.tiles.append(Tree(self, i, j))
+                else:
+                    self.tiles.append(Grass(self, i, j))
+
+        #loads sprites and hitboxes            
+        for j, row in enumerate(self.map.data):
+            for i, column in enumerate(row):
+                if self.map.data[j][i] == '2' or self.map.data[j][i] == '4' or self.map.data[j][i] == '5' or self.map.data[j][i] == 't':
                     wall = Wall(self, i, j)
                     self.all_sprites.add(wall)
                     self.walls.add(wall)
@@ -43,6 +62,7 @@ class Game:
                     self.monsters.add(monster)
                     self.animations.add(monster)
                     self.walls.add(monster)
+                                    
                     
     def new(self):
         self.all_sprites = pygame.sprite.Group()
@@ -50,6 +70,7 @@ class Game:
         self.walls = pygame.sprite.Group()
         self.monsters = pygame.sprite.Group()
         self.animations = pygame.sprite.Group()
+        self.tiles = []
         self.map = Map("map.txt")
         self.load_map()
         self.camera = Camera(self.map.width, self.map.height)
@@ -61,8 +82,9 @@ class Game:
         self.camera.update(self.player)
        
     def animate(self, dt):
-        for sprite in self.animations:
-            self.animator.animate_sprite(sprite, dt)
+        for sprite in self.active_sprites:
+            for sprite in self.animations:
+                self.animator.animate_sprite(sprite, dt)
 
     def add_active_sprites(self):
         self.active_sprites.empty()
@@ -79,8 +101,8 @@ class Game:
             pygame.draw.line(self.screen, WHITE, (0, y), (WIDTH, y))
             
     def draw(self):
-        self.screen.fill(BLACK)
-        self.draw_grid()
+        for element in self.tiles:
+            self.screen.blit(element.image, self.camera.offset(element))
         for sprite in self.active_sprites:
             self.screen.blit(sprite.image, self.camera.offset(sprite))
         pygame.display.flip()
