@@ -1,8 +1,8 @@
 import os
 
-WIDTH = 640
-HEIGHT = 640
-TILE = 32
+WIDTH = 360
+HEIGHT = 240
+TILE = 16
 GRID_WIDTH = WIDTH / TILE
 GRID_HEIGHT = HEIGHT / TILE
 FPS = 30
@@ -18,7 +18,7 @@ BLUE = (0, 0, 255)
 game_folder = os.path.dirname(__file__)
 image_folder = os.path.join(game_folder, "images")
 
-PLAYER_SPEED = 360
+PLAYER_SPEED = 160
 WALKING = 'WALKING'
 STANDING = 'STANDING'
 ATTACKING = 'ATTACKING'
