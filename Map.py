@@ -2,6 +2,7 @@ from os import path
 from Constants import *
 from Tiles import *
 
+
 class Map:
 
     def __init__(self, filename):

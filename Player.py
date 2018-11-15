@@ -1,11 +1,13 @@
 import pygame as pygame
 from Constants import *
 from Entity import *
+from Hitbox import *
 
 class Player(Entity):
 
     def __init__(self, game, x, y):
         super().__init__(game, x, y)
+        self.inventory = pygame.sprite.Group()
 
     def load_images(self):
         self.south_images.append(pygame.image.load(os.path.join(image_folder,"male_char_fr1.png")).convert_alpha())
@@ -23,8 +25,7 @@ class Player(Entity):
 
         self.image = self.south_standing[0]
 
-    def handle_event(self):
-
+    def reset_speed(self):
         self.vx = 0
         self.vy = 0
         keys = pygame.key.get_pressed()
@@ -35,7 +36,7 @@ class Player(Entity):
         elif keys[pygame.K_UP]:
             self.vy = -PLAYER_SPEED
         elif keys[pygame.K_DOWN]:
-            self.vy = PLAYER_SPEED
+            self.vy = PLAYER_SPEED                               
 
     def move(self): 
         self.x = self.x + self.vx * self.game.dt
@@ -47,7 +48,6 @@ class Player(Entity):
 
     
     def update(self):
-        self.handle_event()
         self.update_facing()
         if self.collisions():
             if self.x_collision():
@@ -55,3 +55,4 @@ class Player(Entity):
             if self.y_collision():
                 self.y_position_reset(self.y_collision())
         self.move()
+        self.reset_speed()
