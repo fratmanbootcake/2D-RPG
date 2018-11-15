@@ -1,4 +1,5 @@
 from Constants import *
+from Hitbox import *
 import pygame as pygame
 
 class Entity(pygame.sprite.Sprite):
@@ -26,6 +27,8 @@ class Entity(pygame.sprite.Sprite):
         self.facing = SOUTH
         self.timer = 0
         self.frame_duration = 50/1000
+        self.attack_timer = 0
+        self.attack_duration = 50/1000
 
     def update_facing(self):
         if self.vx > 0 and self.vy == 0:
@@ -89,6 +92,14 @@ class Entity(pygame.sprite.Sprite):
             self.state = WALKING
         else:
             self.state = STANDING
+
+    def attack(self, dt):
+        self.attack_timer += dt
+        while self.attack_timer >= self.attack_duration:
+            self.attack_timer -= self.attack_duration
+            hit = Hitbox(self, self.game)
+            self.game.hitboxes.add(hit)
+            self.game.all_sprites.add(hit)
 
     def update(self):
         self.update_facing()
