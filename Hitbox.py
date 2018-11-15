@@ -1,9 +1,10 @@
 import pygame as pygame
+from Camera import *
 from Constants import *
 
 class Hitbox(pygame.sprite.Sprite):
 
-    def __init__(self, attacker, game):
+    def __init__(self, attacker, game, vx = 0, vy = 0):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.attacker = attacker
@@ -12,10 +13,11 @@ class Hitbox(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill(WHITE)
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.vx = PLAYER_SPEED
-        self.vy = 0
+        self.vx = vx
+        self.vy = vy
         self.timer = 0
         self.duration = 50/1000
+        self.range = 8*TILE
 
     def get_position(self):
         if self.attacker.facing == NORTH:
@@ -33,28 +35,47 @@ class Hitbox(pygame.sprite.Sprite):
 
     def get_orientation(self):
         if self.attacker.facing == NORTH or self.attacker.facing == SOUTH:
-            self.width = 5
-            self.height = TILE
+            self.width = 2
+            self.height = int(TILE/2)
         elif self.attacker.facing == EAST or self.attacker.facing == WEST:
-            self.width = TILE
-            self.height = 5
+            self.width = int(TILE/2)
+            self.height = 2
 
     def collision(self):
+        hitbox_rect = pygame.Rect(self.x + self.vx * self.game.dt, self.y + self.vy * self.game.dt, self.width, self.height)
         for sprite in self.game.all_sprites:
             if sprite not in self.game.hitboxes and sprite != self.attacker:
-                print((sprite.x, sprite.rect.width, sprite.y, sprite.rect.width,
-                      self.x, self.width, self.y, self.height))
-                if pygame.Rect(sprite.x, sprite.y, sprite.rect.width, sprite.rect.height).colliderect(self.rect):
-                    sprite.kill()
+                sprite_rect = pygame.Rect(sprite.x + int(TILE/4) + sprite.vx * self.game.dt, sprite.y + int(TILE/4) + sprite.vy * self.game.dt, sprite.rect.width, sprite.rect.height)
+                if hitbox_rect.colliderect(sprite_rect):
+                    self.kill()
+                    return sprite
+
+    def move(self):
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        if self.vx != 0:
+            self.range -= self.vx * self.game.dt
+        elif self.vy != 0:
+            self.range -= self.vy * self.game.dt
+
+    def destruct(self):
+        if self.range <= 0:
+            self.vy = 0
+            self.vx = 0
 
     def update(self):
-        self.collision()
-        self.timer += self.game.dt
-        while self.timer > self.duration:
-            self.timer -= self.duration
-            self.kill()
-        
-
+        self.move()
+        sprite = self.collision()
+        if self.collision():
+            if self.attacker.hit_connect(sprite):
+                sprite.damage(self.attacker)
+        if self.vy == 0 and self.vx == 0:
+            self.timer += self.game.dt
+            while self.timer > self.duration:
+                self.timer -= self.duration
+                self.kill()
+        else:
+            self.destruct()
 
 
     

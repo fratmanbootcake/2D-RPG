@@ -46,7 +46,6 @@ class Game:
                     self.all_sprites.add(monster)
                     self.monsters.add(monster)
                     self.animations.add(monster)
-                    self.walls.append(monster)
       
     def new(self):
         self.all_sprites = pygame.sprite.Group()
@@ -102,7 +101,9 @@ class Game:
                     elif event.key == pygame.K_p:
                         self.state = PAUSED
                     elif event.key == pygame.K_SPACE:
-                        self.player.attack(self.dt)
+                        self.player.attack(self.dt, 0, 0)
+                    elif event.key == pygame.K_f:
+                        self.player.attack(self.dt, 1, 1) # this method determines speed of the projectile based on non-zero values passed
 
 
     def game_loop(self):
