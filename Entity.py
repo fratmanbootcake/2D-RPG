@@ -93,11 +93,20 @@ class Entity(pygame.sprite.Sprite):
         else:
             self.state = STANDING
 
-    def attack(self, dt):
+    def attack(self, dt, vx, vy):
+        if vx != 0 or vy != 0:
+            if self.facing == NORTH:
+                vx, vy = 0, -PLAYER_SPEED
+            elif self.facing == SOUTH:
+                vx, vy = 0, PLAYER_SPEED
+            elif self.facing == EAST:
+                vx, vy = PLAYER_SPEED, 0
+            elif self.facing == WEST:
+                vx, vy = -PLAYER_SPEED, 0
         self.attack_timer += dt
         while self.attack_timer >= self.attack_duration:
             self.attack_timer -= self.attack_duration
-            hit = Hitbox(self, self.game)
+            hit = Hitbox(self, self.game, vx, vy)
             self.game.hitboxes.add(hit)
             self.game.all_sprites.add(hit)
 

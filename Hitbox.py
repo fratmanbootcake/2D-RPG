@@ -1,9 +1,10 @@
 import pygame as pygame
+from Camera import *
 from Constants import *
 
 class Hitbox(pygame.sprite.Sprite):
 
-    def __init__(self, attacker, game):
+    def __init__(self, attacker, game, vx = 0, vy = 0):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.attacker = attacker
@@ -12,8 +13,8 @@ class Hitbox(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill(WHITE)
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.vx = PLAYER_SPEED
-        self.vy = 0
+        self.vx = vx
+        self.vy = vy
         self.timer = 0
         self.duration = 50/1000
 
@@ -40,21 +41,34 @@ class Hitbox(pygame.sprite.Sprite):
             self.height = 5
 
     def collision(self):
+        hitbox_rect = pygame.Rect(self.x + self.vx * self.game.dt, self.y + self.vy * self.game.dt, self.width, self.height)
         for sprite in self.game.all_sprites:
             if sprite not in self.game.hitboxes and sprite != self.attacker:
-                print((sprite.x, sprite.rect.width, sprite.y, sprite.rect.width,
-                      self.x, self.width, self.y, self.height))
-                if pygame.Rect(sprite.x, sprite.y, sprite.rect.width, sprite.rect.height).colliderect(self.rect):
+                sprite_rect = pygame.Rect(sprite.x + sprite.vx * self.game.dt, sprite.y + sprite.vy * self.game.dt, sprite.rect.width, sprite.rect.height)
+                if hitbox_rect.colliderect(sprite_rect):
                     sprite.kill()
 
-    def update(self):
-        self.collision()
-        self.timer += self.game.dt
-        while self.timer > self.duration:
-            self.timer -= self.duration
-            self.kill()
-        
+    def move(self):
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
 
+    def destruct(self):
+        offset_position = self.game.camera.offset(self)
+        if offset_position[0] < 0 or offset_position[0] > WIDTH:
+            self.kill()
+        elif offset_position[1] < 0 or offset_position[1] > HEIGHT:
+            self.kill()
+
+    def update(self):
+        self.move()
+        self.collision()
+        if self.vy == 0 and self.vx == 0:
+            self.timer += self.game.dt
+            while self.timer > self.duration:
+                self.timer -= self.duration
+                self.kill()
+        else:
+            self.destruct()
 
 
     
