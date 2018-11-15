@@ -1,0 +1,25 @@
+import os
+import pygame as pygame
+from Constants import *
+
+GRASS = pygame.image.load(os.path.join(image_folder, "grass.png"))
+TREE = pygame.image.load(os.path.join(image_folder, "tree01.png"))
+WATER = pygame.image.load(os.path.join(image_folder, "water.png"))
+WATER_LEFT = pygame.image.load(os.path.join(image_folder, "water_l.png"))
+WATER_BOTTOM_LEFT = pygame.image.load(os.path.join(image_folder, "water_bl.png"))
+WATER_BOTTOM = pygame.image.load(os.path.join(image_folder, "water_b.png"))
+WATER_TOP_RIGHT_2 = pygame.image.load(os.path.join(image_folder, "water_tr2.png"))
+ROOF_1 = pygame.image.load(os.path.join(image_folder, "roof_01.png"))
+ROOF_2 = pygame.image.load(os.path.join(image_folder, "roof_02.png"))
+ROOF_3 = pygame.image.load(os.path.join(image_folder, "roof_03.png"))
+ROOF_4 = pygame.image.load(os.path.join(image_folder, "roof_04.png"))
+ROOF_5 = pygame.image.load(os.path.join(image_folder, "roof_05.png"))
+ROOF_6 = pygame.image.load(os.path.join(image_folder, "roof_06.png"))
+ROOF_7 = pygame.image.load(os.path.join(image_folder, "roof_07.png"))
+ROOF_8 = pygame.image.load(os.path.join(image_folder, "roof_08.png"))
+ROOF_9 = pygame.image.load(os.path.join(image_folder, "roof_09.png"))
+ROOF_10 = pygame.image.load(os.path.join(image_folder, "roof_10.png"))
+WALL_2 = pygame.image.load(os.path.join(image_folder, "wall_02.png"))
+WINDOW_1 = pygame.image.load(os.path.join(image_folder, "window_01.png"))
+DOOR = pygame.image.load(os.path.join(image_folder, "door.png"))
+BARREL = pygame.image.load(os.path.join(image_folder, "barrel.png"))

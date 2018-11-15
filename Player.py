@@ -9,19 +9,19 @@ class Player(Entity):
 
     def load_images(self):
         self.south_images.append(pygame.image.load(os.path.join(image_folder,"male_char_fr1.png")).convert_alpha())
-        self.south_images.append(pygame.image.load(os.path.join(image_folder,"male_char_fr2.png")).convert_alpha())
+        self.south_standing.append(pygame.image.load(os.path.join(image_folder,"male_char_fr2.png")).convert_alpha())
         self.south_images.append(pygame.image.load(os.path.join(image_folder,"male_char_fr3.png")).convert_alpha())
         self.west_images.append(pygame.image.load(os.path.join(image_folder,"male_char_lf1.png")).convert_alpha())
-        self.west_images.append(pygame.image.load(os.path.join(image_folder,"male_char_lf2.png")).convert_alpha())
+        self.west_standing.append(pygame.image.load(os.path.join(image_folder,"male_char_lf2.png")).convert_alpha())
         self.west_images.append(pygame.image.load(os.path.join(image_folder,"male_char_lf3.png")).convert_alpha())
         self.east_images.append(pygame.image.load(os.path.join(image_folder,"male_char_rt1.png")).convert_alpha())
-        self.east_images.append(pygame.image.load(os.path.join(image_folder,"male_char_rt2.png")).convert_alpha())
+        self.east_standing.append(pygame.image.load(os.path.join(image_folder,"male_char_rt2.png")).convert_alpha())
         self.east_images.append(pygame.image.load(os.path.join(image_folder,"male_char_rt3.png")).convert_alpha())
         self.north_images.append(pygame.image.load(os.path.join(image_folder,"male_char_bk1.png")).convert_alpha())
-        self.north_images.append(pygame.image.load(os.path.join(image_folder,"male_char_bk2.png")).convert_alpha())
+        self.north_standing.append(pygame.image.load(os.path.join(image_folder,"male_char_bk2.png")).convert_alpha())
         self.north_images.append(pygame.image.load(os.path.join(image_folder,"male_char_bk3.png")).convert_alpha())
 
-        self.image = self.south_images[1]
+        self.image = self.south_standing[0]
 
     def handle_event(self):
 

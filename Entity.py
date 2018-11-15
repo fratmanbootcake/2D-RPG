@@ -10,6 +10,10 @@ class Entity(pygame.sprite.Sprite):
         self.south_images = []
         self.east_images = []
         self.west_images = []
+        self.north_standing = []
+        self.south_standing = []
+        self.east_standing = []
+        self.west_standing = []
         self.attacking_images = []
         self.animation_index = 0
         self.load_images()
@@ -44,41 +48,38 @@ class Entity(pygame.sprite.Sprite):
     def collisions(self):
         new_x = self.x + self.vx * self.game.dt
         new_y = self.y + self.vy * self.game.dt
-        for sprite in self.game.active_sprites:
-            if sprite in self.game.walls:
-                if pygame.Rect(new_x, new_y, TILE, self.rect.height).colliderect(sprite):
-                    return sprite
+        for wall in self.game.walls:
+            if pygame.Rect(new_x, new_y, TILE, self.rect.height).colliderect(wall.rect):
+                return wall
 
     def x_collision(self):
         new_x = self.x + self.vx * self.game.dt
-        for sprite in self.game.active_sprites:
-            if sprite in self.game.walls:
-                if pygame.Rect(new_x, self.y, TILE, self.rect.height).colliderect(sprite):
-                    return sprite
+        for wall in self.game.walls:
+            if pygame.Rect(new_x, self.y, TILE, self.rect.height).colliderect(wall.rect):
+                return wall
 
     def y_collision(self):
         new_y = self.y + self.vy * self.game.dt
-        for sprite in self.game.active_sprites:
-            if sprite in self.game.walls:
-                if pygame.Rect(self.x, new_y, TILE, self.rect.height).colliderect(sprite):
-                    return sprite
+        for wall in self.game.walls:
+            if pygame.Rect(self.x, new_y, TILE, self.rect.height).colliderect(wall.rect):
+                    return wall
 
-    def x_position_reset(self, sprite):
-        if sprite:
+    def x_position_reset(self, wall):
+        if wall:
             if self.vx > 0:
-                self.x = sprite.x - self.rect.width
+                self.x = wall.x - self.rect.width
                 self.vx = 0
             elif self.vx < 0:
-                self.x = sprite.x + sprite.rect.width
+                self.x = wall.x + wall.rect.width
                 self.vx = 0
                 
-    def y_position_reset(self, sprite):
-        if sprite:
+    def y_position_reset(self, wall):
+        if wall:
             if self.vy > 0:
-                self.y = sprite.rect.y - self.rect.height
+                self.y = wall.rect.y - self.rect.height
                 self.vy = 0
             elif self.vy < 0:
-                self.y = sprite.rect.y + sprite.rect.height
+                self.y = wall.rect.y + wall.rect.height
                 self.vy =0
 
     def move(self): 

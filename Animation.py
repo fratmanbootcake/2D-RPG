@@ -21,10 +21,10 @@ class Animation:
                     entity.image = entity.north_images[entity.animation_index % len(entity.north_images)]
         elif entity.state == STANDING:
             if entity.facing == SOUTH:
-                entity.image = entity.south_images[1]
+                entity.image = entity.south_standing[0]
             elif entity.facing == WEST:
-                entity.image = entity.west_images[1]
+                entity.image = entity.west_standing[0]
             elif entity.facing == EAST:
-                entity.image = entity.east_images[1]
+                entity.image = entity.east_standing[0]
             elif entity.facing == NORTH:
-                entity.image = entity.north_images[1]
+                entity.image = entity.north_standing[0]
