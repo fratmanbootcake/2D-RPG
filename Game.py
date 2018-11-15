@@ -8,6 +8,7 @@ from Camera import *
 from Walls import *
 from Renderer import *
 from Animation import *
+from Hitbox import *
 
 
 
@@ -53,6 +54,7 @@ class Game:
         self.walls = []
         self.monsters = pygame.sprite.Group()
         self.animations = pygame.sprite.Group()
+        self.hitboxes = pygame.sprite.Group()
         self.tiles = []
         self.map = Map("map.txt")
         self.load_map()
@@ -84,20 +86,24 @@ class Game:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if self.state == MENU:
+                if self.state == MENU: # start menu
                     if event.key == pygame.K_1:
                         self.state = RUNNING
                     elif event.key == pygame.K_2:
                         pygame.quit()
                         sys.exit()
-                elif self.state == PAUSED:
+                elif self.state == PAUSED: # paused
                     if event.key == pygame.K_p:
                         self.state = RUNNING
-                elif self.state == RUNNING:
-                    if event.key == pygame.K_p:
+                elif self.state == RUNNING: # playing
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    elif event.key == pygame.K_p:
                         self.state = PAUSED
-                elif self.state == BATTLE:
-                    pass
+                    elif event.key == pygame.K_SPACE:
+                        self.player.attack(self.dt)
+
 
     def game_loop(self):
         self.create_window()
