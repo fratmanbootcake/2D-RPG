@@ -24,8 +24,9 @@ class Monster(Entity):
         self.image = self.south_images[1]
 
     def try_move(self):
-        self.vx = PLAYER_SPEED/2
-        # until pathfinding is implemented (if required? maybe pokemon / FF style fights)
+        pass
+        #self.vx = PLAYER_SPEED/2
+        # until pathfinding is implemented
 
     def update(self):
         self.try_move()
@@ -36,6 +37,8 @@ class Monster(Entity):
             if self.y_collision():
                 self.y_position_reset(self.y_collision())
         self.move()
+        if not self.is_alive():
+            self.kill()
         
 
 

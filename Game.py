@@ -46,7 +46,6 @@ class Game:
                     self.all_sprites.add(monster)
                     self.monsters.add(monster)
                     self.animations.add(monster)
-                    self.walls.append(monster)
       
     def new(self):
         self.all_sprites = pygame.sprite.Group()

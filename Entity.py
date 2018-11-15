@@ -1,6 +1,7 @@
 from Constants import *
 from Hitbox import *
 import pygame as pygame
+from random import randint
 
 class Entity(pygame.sprite.Sprite):
 
@@ -29,6 +30,9 @@ class Entity(pygame.sprite.Sprite):
         self.frame_duration = 50/1000
         self.attack_timer = 0
         self.attack_duration = 50/1000
+        self.hp = 20
+        self.armour = 10
+        self.strength = 2
 
     def update_facing(self):
         if self.vx > 0 and self.vy == 0:
@@ -53,19 +57,19 @@ class Entity(pygame.sprite.Sprite):
         new_y = self.y + self.vy * self.game.dt
         for wall in self.game.walls:
             if pygame.Rect(new_x, new_y, TILE, self.rect.height).colliderect(wall.rect):
-                return wall
+                return wall            
 
     def x_collision(self):
         new_x = self.x + self.vx * self.game.dt
         for wall in self.game.walls:
             if pygame.Rect(new_x, self.y, TILE, self.rect.height).colliderect(wall.rect):
-                return wall
+                return wall           
 
     def y_collision(self):
         new_y = self.y + self.vy * self.game.dt
         for wall in self.game.walls:
             if pygame.Rect(self.x, new_y, TILE, self.rect.height).colliderect(wall.rect):
-                    return wall
+                    return wall            
 
     def x_position_reset(self, wall):
         if wall:
@@ -93,16 +97,19 @@ class Entity(pygame.sprite.Sprite):
         else:
             self.state = STANDING
 
+    def damage(self, attacker):
+        self.hp -= randint(1, 8) + attacker.strength        
+
     def attack(self, dt, vx, vy):
         if vx != 0 or vy != 0:
             if self.facing == NORTH:
-                vx, vy = 0, -PLAYER_SPEED
+                vx, vy = 0, -2*PLAYER_SPEED
             elif self.facing == SOUTH:
-                vx, vy = 0, PLAYER_SPEED
+                vx, vy = 0, 2*PLAYER_SPEED
             elif self.facing == EAST:
-                vx, vy = PLAYER_SPEED, 0
+                vx, vy = 2*PLAYER_SPEED, 0
             elif self.facing == WEST:
-                vx, vy = -PLAYER_SPEED, 0
+                vx, vy = -2*PLAYER_SPEED, 0
         self.attack_timer += dt
         while self.attack_timer >= self.attack_duration:
             self.attack_timer -= self.attack_duration
@@ -110,11 +117,15 @@ class Entity(pygame.sprite.Sprite):
             self.game.hitboxes.add(hit)
             self.game.all_sprites.add(hit)
 
+    def hit_connect(self, sprite):
+        if randint(1,20) + self.strength > sprite.armour:
+            return True
+
+    def is_alive(self):
+        if self.hp > 0:
+            return True
+        else:
+            return False
+
     def update(self):
-        self.update_facing()
-        if self.collisions():
-            if self.x_collision():
-                self.x_position_reset(self.x_collision())
-            if self.y_collision():
-                self.y_position_reset(self.y_collision())
-        self.move()
+        pass

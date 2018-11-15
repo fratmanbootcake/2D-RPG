@@ -17,6 +17,7 @@ class Hitbox(pygame.sprite.Sprite):
         self.vy = vy
         self.timer = 0
         self.duration = 50/1000
+        self.range = 8*TILE
 
     def get_position(self):
         if self.attacker.facing == NORTH:
@@ -34,34 +35,40 @@ class Hitbox(pygame.sprite.Sprite):
 
     def get_orientation(self):
         if self.attacker.facing == NORTH or self.attacker.facing == SOUTH:
-            self.width = 5
-            self.height = TILE
+            self.width = 2
+            self.height = int(TILE/2)
         elif self.attacker.facing == EAST or self.attacker.facing == WEST:
-            self.width = TILE
-            self.height = 5
+            self.width = int(TILE/2)
+            self.height = 2
 
     def collision(self):
         hitbox_rect = pygame.Rect(self.x + self.vx * self.game.dt, self.y + self.vy * self.game.dt, self.width, self.height)
         for sprite in self.game.all_sprites:
             if sprite not in self.game.hitboxes and sprite != self.attacker:
-                sprite_rect = pygame.Rect(sprite.x + sprite.vx * self.game.dt, sprite.y + sprite.vy * self.game.dt, sprite.rect.width, sprite.rect.height)
+                sprite_rect = pygame.Rect(sprite.x + int(TILE/4) + sprite.vx * self.game.dt, sprite.y + int(TILE/4) + sprite.vy * self.game.dt, sprite.rect.width, sprite.rect.height)
                 if hitbox_rect.colliderect(sprite_rect):
-                    sprite.kill()
+                    self.kill()
+                    return sprite
 
     def move(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
+        if self.vx != 0:
+            self.range -= self.vx * self.game.dt
+        elif self.vy != 0:
+            self.range -= self.vy * self.game.dt
 
     def destruct(self):
-        offset_position = self.game.camera.offset(self)
-        if offset_position[0] < 0 or offset_position[0] > WIDTH:
-            self.kill()
-        elif offset_position[1] < 0 or offset_position[1] > HEIGHT:
-            self.kill()
+        if self.range <= 0:
+            self.vy = 0
+            self.vx = 0
 
     def update(self):
         self.move()
-        self.collision()
+        sprite = self.collision()
+        if self.collision():
+            if self.attacker.hit_connect(sprite):
+                sprite.damage(self.attacker)
         if self.vy == 0 and self.vx == 0:
             self.timer += self.game.dt
             while self.timer > self.duration:
