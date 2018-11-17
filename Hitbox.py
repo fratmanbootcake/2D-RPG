@@ -35,11 +35,11 @@ class Hitbox(pygame.sprite.Sprite):
 
     def get_orientation(self):
         if self.attacker.facing == NORTH or self.attacker.facing == SOUTH:
-            self.width = 2
-            self.height = int(TILE/2)
+            self.width = 1
+            self.height = int(3*TILE/4)
         elif self.attacker.facing == EAST or self.attacker.facing == WEST:
-            self.width = int(TILE/2)
-            self.height = 2
+            self.width = int(3*TILE/4)
+            self.height = 1
 
     def collision(self):
         hitbox_rect = pygame.Rect(self.x + self.vx * self.game.dt, self.y + self.vy * self.game.dt, self.width, self.height)
@@ -53,6 +53,7 @@ class Hitbox(pygame.sprite.Sprite):
     def move(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
+        self.range -= 0
         if self.vx != 0:
             self.range -= self.vx * self.game.dt
         elif self.vy != 0:
@@ -69,6 +70,7 @@ class Hitbox(pygame.sprite.Sprite):
         if self.collision():
             if self.attacker.hit_connect(sprite):
                 sprite.damage(self.attacker)
+                sprite.rebound(self.attacker)
         if self.vy == 0 and self.vx == 0:
             self.timer += self.game.dt
             while self.timer > self.duration:
