@@ -9,6 +9,7 @@ from Walls import *
 from Renderer import *
 from Animation import *
 from Hitbox import *
+from Items import *
 
 
 
@@ -46,6 +47,10 @@ class Game:
                     self.all_sprites.add(monster)
                     self.monsters.add(monster)
                     self.animations.add(monster)
+                elif self.map.data[j][i] == 'S':
+                    item = Sword(self, i, j, "Sword01.png")
+                    self.items.add(item)
+                    
       
     def new(self):
         self.all_sprites = pygame.sprite.Group()
@@ -54,6 +59,7 @@ class Game:
         self.monsters = pygame.sprite.Group()
         self.animations = pygame.sprite.Group()
         self.hitboxes = pygame.sprite.Group()
+        self.items = pygame.sprite.Group()
         self.tiles = []
         self.map = Map("map.txt")
         self.load_map()
@@ -64,6 +70,7 @@ class Game:
     def update(self):
         self.add_active_sprites()
         self.all_sprites.update()
+        self.items.update()
         self.camera.update(self.player)
        
     def animate(self, dt):

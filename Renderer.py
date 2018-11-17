@@ -12,6 +12,8 @@ class Renderer:
     def draw_game(self):
         for element in self.game.tiles:
             self.game.screen.blit(element.image, self.game.camera.offset(element))
+        for item in self.game.items:
+            self.game.screen.blit(item.image, self.game.camera.offset(item))
         for sprite in self.game.active_sprites:
             self.game.screen.blit(sprite.image, self.game.camera.offset(sprite))
         self.game.screen.blit(self.game.show_fps, (10, 10))
