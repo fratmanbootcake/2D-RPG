@@ -8,14 +8,7 @@ class Entity(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
         pygame.sprite.Sprite.__init__(self)
-        self.north_images = []
-        self.south_images = []
-        self.east_images = []
-        self.west_images = []
-        self.north_standing = []
-        self.south_standing = []
-        self.east_standing = []
-        self.west_standing = []
+        self.images = []
         self.attacking_images = []
         self.animation_index = 0
         self.load_images()
@@ -24,15 +17,22 @@ class Entity(pygame.sprite.Sprite):
         self.y = y * TILE
         self.vx = 0
         self.vy = 0
-        self.state = STANDING
         self.facing = SOUTH
+        self.horizontal_facing = EAST
         self.timer = 0
-        self.frame_duration = 50/1000
+        self.frame_duration = 200/1000
         self.attack_timer = 0
         self.attack_duration = 50/1000
         self.hp = 20
+        self.max_hp = self.hp
         self.armour = 10
         self.strength = 2
+
+    def health_bar_update(self):
+        self.bar = pygame.Surface((TILE, 2))
+        self.bar.fill(BLACK)
+        self.health_bar = pygame.Surface((int(self.hp / self.max_hp * TILE), 2))
+        self.health_bar.fill(RED)
 
     def update_facing(self):
         if self.vx > 0 and self.vy == 0:
@@ -43,32 +43,35 @@ class Entity(pygame.sprite.Sprite):
             self.facing = SOUTH
         elif self.vx == 0 and self.vy < 0:
             self.facing = NORTH
-        elif self.vx > 0 and self.vy > 0:
-            self.facing = SOUTH_EAST
-        elif self.vx < 0 and self.vy > 0:
-            self.facing = SOUTH_WEST
-        elif self.vx > 0 and self.vy < 0:
-            self.facing = NORTH_EAST
-        elif self.vx < 0 and self.vy < 0:
-            self.facing = NORTH_WEST
+
+        if self.facing == EAST or self.facing == WEST:
+            self.horizontal_facing = self.facing
 
     def collisions(self):
         new_x = self.x + self.vx * self.game.dt
         new_y = self.y + self.vy * self.game.dt
         for wall in self.game.walls:
-            if pygame.Rect(new_x, new_y, TILE, self.rect.height).colliderect(wall.rect):
-                return wall            
+            if pygame.Rect(new_x, new_y, TILE, TILE).colliderect(wall.rect):
+                return wall
+
+    def sprite_collision(self):
+        new_x = self.x + self.vx * self.game.dt
+        new_y = self.y + self.vy * self.game.dt
+        for sprite in self.game.characters:
+            if sprite != self:
+                if pygame.Rect(sprite.x, sprite.y, TILE, TILE).colliderect(pygame.Rect(new_x, new_y, TILE, TILE)):
+                     return sprite
 
     def x_collision(self):
         new_x = self.x + self.vx * self.game.dt
         for wall in self.game.walls:
-            if pygame.Rect(new_x, self.y, TILE, self.rect.height).colliderect(wall.rect):
+            if pygame.Rect(new_x, self.y, TILE, TILE).colliderect(wall.rect):
                 return wall           
 
     def y_collision(self):
         new_y = self.y + self.vy * self.game.dt
         for wall in self.game.walls:
-            if pygame.Rect(self.x, new_y, TILE, self.rect.height).colliderect(wall.rect):
+            if pygame.Rect(self.x, new_y, TILE, TILE).colliderect(wall.rect):
                     return wall            
 
     def x_position_reset(self, wall):
@@ -92,15 +95,12 @@ class Entity(pygame.sprite.Sprite):
     def move(self): 
         self.x = self.x + self.vx * self.game.dt
         self.y = self.y + self.vy * self.game.dt
-        if self.vx != 0 or self.vy !=0:
-            self.state = WALKING
-        else:
-            self.state = STANDING
 
     def damage(self, attacker):
         self.hp -= randint(1, 8) + attacker.strength        
 
     def attack(self, dt, vx, vy):
+        # determine the kind of weapon the entity has equipped, then determine the hitbox velocity based on that
         if vx != 0 or vy != 0:
             if self.facing == NORTH:
                 vx, vy = 0, -2*PLAYER_SPEED
@@ -121,6 +121,16 @@ class Entity(pygame.sprite.Sprite):
         if randint(1,20) + self.strength > sprite.armour:
             return True
 
+    def rebound(self, attacker):
+        if attacker.facing == NORTH:
+            self.y -= TILE
+        elif attacker.facing == SOUTH:
+            self.y += TILE
+        elif attacker.facing == WEST:
+            self.x -= TILE
+        elif attacker.facing == EAST:
+            self.x += TILE
+
     def is_alive(self):
         if self.hp > 0:
             return True
@@ -129,3 +139,8 @@ class Entity(pygame.sprite.Sprite):
 
     def update(self):
         pass
+
+
+
+
+    

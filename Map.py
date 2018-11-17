@@ -1,12 +1,16 @@
 from os import path
 from Constants import *
 from Tiles import *
+from Walls import *
+from Player import *
+from Monster import *
+from Items import *
 
 
 class Map:
 
-    def __init__(self, filename):
-
+    def __init__(self, game, filename):
+        self.game = game
         self.data = []
         with open(filename, "rt") as f:
             for row in f:
@@ -16,54 +20,73 @@ class Map:
         self.width = self.tile_width * TILE
         self.height = self.tile_height * TILE
 
-    def add_tiles(self, game):
+    def add_tiles(self):
         #loads map tiles
-        for j, row in enumerate(game.map.data):
+        for j, row in enumerate(self.data):
             for i, column in enumerate(row):
-                game.tiles.append(Grass(game, i, j))
-                if game.map.data[j][i] == '1':
-                    game.tiles.append(Water(game, i, j))
-                elif game.map.data[j][i] == '2':
-                    game.tiles.append(WaterBottom(game, i, j))
-                elif game.map.data[j][i] == '3':
-                    game.tiles.append(WaterTopRight2(game, i, j))
-                elif game.map.data[j][i] == '4':
-                    game.tiles.append(WaterLeft(game, i, j))
-                elif game.map.data[j][i] == '5':
-                    game.tiles.append(WaterBottomLeft(game, i, j))
-                elif (game.map.data[j][i] == 'T' or
-                      game.map.data[j][i] == 't'):
-                    game.tiles.append(Tree(game, i, j))
-                elif game.map.data[j][i] == 'a':
-                    game.tiles.append(Roof1(game, i, j))
-                elif game.map.data[j][i] == 'd':
-                    game.tiles.append(Roof2(game, i, j))
-                elif game.map.data[j][i] == 'b':
-                    game.tiles.append(Roof3(game, i, j))
-                elif game.map.data[j][i] == 'c':
-                    game.tiles.append(Roof4(game, i, j))
-                elif game.map.data[j][i] == 'f':
-                    game.tiles.append(Roof5(game, i, j))
-                elif game.map.data[j][i] == 'g':
-                    game.tiles.append(Roof6(game, i, j))
-                elif game.map.data[j][i] == 'j':
-                    game.tiles.append(Roof7(game, i, j))
-                elif game.map.data[j][i] == 'e':
-                    game.tiles.append(Roof8(game, i, j))
-                elif game.map.data[j][i] == 'i':
-                    game.tiles.append(Roof9(game, i, j))
-                elif game.map.data[j][i] == 'l':
-                    game.tiles.append(Roof10(game, i, j))
-                elif game.map.data[j][i] == 'm':
-                    game.tiles.append(Wall2(game, i, j))
-                elif game.map.data[j][i] == 'n':
-                    game.tiles.append(Window1(game, i, j))
-                elif game.map.data[j][i] == 'B':
-                    game.tiles.append(Barrel(game, i, j))
-                elif game.map.data[j][i] == 'D':
-                    game.tiles.append(Door(game, i, j))
+                self.game.tiles.append(Grass(self.game, i, j))
+                if self.data[j][i] == '1':
+                    self.game.tiles.append(Water(self.game, i, j))
+                elif self.data[j][i] == '2':
+                    self.game.tiles.append(WaterBottom(self.game, i, j))
+                elif self.data[j][i] == '3':
+                    self.game.tiles.append(WaterTopRight2(self.game, i, j))
+                elif self.data[j][i] == '4':
+                    self.game.tiles.append(WaterLeft(self.game, i, j))
+                elif self.data[j][i] == '5':
+                    self.game.tiles.append(WaterBottomLeft(self.game, i, j))
+                elif (self.data[j][i] == 'T' or
+                      self.data[j][i] == 't'):
+                    self.game.tiles.append(Tree(self.game, i, j))
+                elif self.data[j][i] == 'a':
+                    self.game.tiles.append(Roof1(self.game, i, j))
+                elif self.data[j][i] == 'd':
+                    self.game.tiles.append(Roof2(self.game, i, j))
+                elif self.data[j][i] == 'b':
+                    self.game.tiles.append(Roof3(self.game, i, j))
+                elif self.data[j][i] == 'c':
+                    self.game.tiles.append(Roof4(self.game, i, j))
+                elif self.data[j][i] == 'f':
+                    self.game.tiles.append(Roof5(self.game, i, j))
+                elif self.data[j][i] == 'g':
+                    self.game.tiles.append(Roof6(self.game, i, j))
+                elif self.data[j][i] == 'j':
+                    self.game.tiles.append(Roof7(self.game, i, j))
+                elif self.data[j][i] == 'e':
+                    self.game.tiles.append(Roof8(self.game, i, j))
+                elif self.data[j][i] == 'i':
+                    self.game.tiles.append(Roof9(self.game, i, j))
+                elif self.data[j][i] == 'l':
+                    self.game.tiles.append(Roof10(self.game, i, j))
+                elif self.data[j][i] == 'm':
+                    self.game.tiles.append(Wall2(self.game, i, j))
+                elif self.data[j][i] == 'n':
+                    self.game.tiles.append(Window1(self.game, i, j))
+                elif self.data[j][i] == 'B':
+                    self.game.tiles.append(Barrel(self.game, i, j))
+                elif self.data[j][i] == 'D':
+                    self.game.tiles.append(Door(self.game, i, j))
 
-
+    def add_sprites(self):
+        #loads sprites and hitboxes
+        for j, row in enumerate(self.data):
+            for i, column in enumerate(row):
+                if self.data[j][i] in ['2','4','5','t','a','b','c','n','m','l','e','j','g','B','D']:
+                    wall = Wall(self.game, i, j)
+                    self.game.walls.append(wall)
+                elif self.data[j][i] == 'p':
+                    self.game.player = Player(self.game, i, j)
+                    self.game.all_sprites.add(self.game.player)
+                    self.game.animations.add(self.game.player)
+                    self.game.characters.add(self.game.player)
+                elif self.data[j][i] == 'M':
+                    monster = Monster(self.game, i, j)
+                    self.game.all_sprites.add(monster)
+                    self.game.characters.add(monster)
+                    self.game.animations.add(monster)
+                elif self.data[j][i] == 'S':
+                    item = Factory().create_weapon(i,j)
+                    self.game.items.add(item)
 
 
 

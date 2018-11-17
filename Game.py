@@ -30,38 +30,19 @@ class Game:
         self.font = pygame.font.Font(None, TILE)
 
     def load_map(self):
-        self.map.add_tiles(self)
-
-        #loads sprites and hitboxes            
-        for j, row in enumerate(self.map.data):
-            for i, column in enumerate(row):
-                if self.map.data[j][i] in ['2','4','5','t','a','b','c','n','m','l','e','j','g','B','D']:
-                    wall = Wall(self, i, j)
-                    self.walls.append(wall)
-                elif self.map.data[j][i] == 'p':
-                    self.player = Player(self, i, j)
-                    self.all_sprites.add(self.player)
-                    self.animations.add(self.player)
-                elif self.map.data[j][i] == 'M':
-                    monster = Monster(self, i, j)
-                    self.all_sprites.add(monster)
-                    self.monsters.add(monster)
-                    self.animations.add(monster)
-                elif self.map.data[j][i] == 'S':
-                    item = Sword(self, i, j, "Sword01.png")
-                    self.items.add(item)
-                    
+        self.map.add_tiles()
+        self.map.add_sprites()                  
       
     def new(self):
         self.all_sprites = pygame.sprite.Group()
         self.active_sprites = pygame.sprite.Group()
         self.walls = []
-        self.monsters = pygame.sprite.Group()
+        self.characters = pygame.sprite.Group()
         self.animations = pygame.sprite.Group()
         self.hitboxes = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
         self.tiles = []
-        self.map = Map("map.txt")
+        self.map = Map(self, "map.txt")
         self.load_map()
         self.camera = Camera(self.map.width, self.map.height)
         self.animator = Animation(self)
@@ -91,26 +72,41 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if self.state == MENU: # start menu
+            if self.state == MENU: # start menu
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:
                         self.state = RUNNING
                     elif event.key == pygame.K_2:
                         pygame.quit()
                         sys.exit()
-                elif self.state == PAUSED: # paused
-                    if event.key == pygame.K_p:
-                        self.state = RUNNING
-                elif self.state == RUNNING: # playing
+            elif self.state == PAUSED: # paused
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
-                    elif event.key == pygame.K_p:
+                        self.state = RUNNING
+                    elif event.key == pygame.K_1:
+                        pass
+                    elif event.key == pygame.K_2:
+                        pass
+            elif self.state == RUNNING: # playing
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
                         self.state = PAUSED
+                    elif event.key == pygame.K_i:
+                        pass # show inventory
+                    elif event.key == pygame.K_c:
+                        pass # show character screen
                     elif event.key == pygame.K_SPACE:
                         self.player.attack(self.dt, 0, 0)
                     elif event.key == pygame.K_f:
-                        self.player.attack(self.dt, 1, 1) # this method determines speed of the projectile based on non-zero values passed
+                        self.player.attack(self.dt, 1, 1) # non-zero values used as placeholder until item types have been added
+                    elif event.key == pygame.K_g:
+                        self.player.pick_up_item()
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
+                    self.player.attack(self.dt, 0, 0)
+            elif self.state == INVENTORY:
+                pass
+            elif self.state == CHARACTER_SCREEN:
+                pass
 
 
     def game_loop(self):
@@ -131,7 +127,9 @@ class Game:
                 self.Renderer.draw_game()
             elif self.state == PAUSED:
                 self.Renderer.draw_pause()
-            elif self.state == BATTLE:
+            elif self.state == INVENTORY:
+                pass
+            elif self.state == CHARACTER_SCREEN:
                 pass
 
 
