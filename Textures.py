@@ -1,4 +1,9 @@
-import os
+"""
+Textures.py
+
+This file loads all of the images required in the game.
+"""
+
 import pygame as pygame
 from Constants import *
 

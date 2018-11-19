@@ -1,3 +1,11 @@
+"""
+Walls.py
+
+This defines the invisible wall collision rectangles. Rectangles were used
+to reduce the overhead associated with using pygame sprites considering all
+these have to do is update their position.
+"""
+
 import pygame as pygame
 from Constants import *
 

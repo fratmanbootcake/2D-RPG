@@ -1,3 +1,10 @@
+"""
+Monster.py
+
+This contains a skeleton daughter class of Entity.
+"""
+
+
 import pygame as pygame
 from Constants import *
 from Entity import *

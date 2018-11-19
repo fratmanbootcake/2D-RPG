@@ -1,7 +1,10 @@
-import pygame as pygame
-from Constants import *
+"""
+Player.py
+
+This contains all of the player data and player methods.
+"""
+
 from Entity import *
-from Hitbox import *
 
 class Player(Entity):
 
@@ -9,6 +12,9 @@ class Player(Entity):
         super().__init__(game, x, y)
         self.inventory = pygame.sprite.Group()
         self.encumberance = 100
+        self.equipped = pygame.sprite.Group()
+        self.hand = None
+        self.body = None
 
     def load_images(self):
         self.images.append(pygame.image.load(os.path.join(image_folder,"warrior01.png")).convert_alpha())
@@ -36,21 +42,6 @@ class Player(Entity):
 
     def level_up(self):
         pass
-
-    def pick_up_item(self):
-        for item in self.game.items:
-            if pygame.Rect(self.x, self.y, TILE, TILE).colliderect(pygame.Rect(item.x, item.y, TILE, TILE)):
-                if not self.inventory_limit_reached(item):
-                    self.inventory.add(item)
-                    self.game.items.remove(item)
-
-    def inventory_limit_reached(self, item):
-        weight = 0
-        for item_ in self.inventory:
-            weight += item_.weight
-        weight += item.weight
-        if weight <= self.encumberance:
-            return False
     
     def update(self):
         self.handle_movement()

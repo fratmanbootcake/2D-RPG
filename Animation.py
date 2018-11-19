@@ -1,3 +1,12 @@
+"""
+Animation.py
+
+This handles the animation of sprites by implementing a simple timer.
+Once the timer reaches the threshhold frame duration, the sprite's animation
+index is progressed by +1. Once the final image is reached, the modulo operator
+ensures the images loop back to the beginning.
+"""
+
 from Constants import *
 
 class Animation:
@@ -14,3 +23,8 @@ class Animation:
                 entity.image = entity.images[2 + entity.animation_index % 2]
             elif entity.horizontal_facing == WEST:
                 entity.image = entity.images[entity.animation_index % 2]
+
+    def animate(self, dt):
+        for sprite in self.game.all_sprites:
+            for sprite in self.game.animations:
+                self.animate_sprite(sprite, dt)

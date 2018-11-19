@@ -1,16 +1,26 @@
+"""
+Items.py
+
+This contains the classes for items. The items are based on the pygame sprite
+class and the various types of items are subclasses of an Item base class.
+
+An item Factory allows for randomising the creation of items. The relevant
+information is obtained from dictionaries in Constants.py.
+"""
+
 import pygame as pygame
 import random
 from Constants import *
 
 class Item(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, filename, cost, weight):
+    def __init__(self, x, y, filename, value, weight):
         pygame.sprite.Sprite.__init__(self)
         self.x = x * TILE
         self.y = y * TILE
         self.image = pygame.image.load(os.path.join(image_folder, filename)).convert_alpha()
         self.rect = self.image.get_rect()
-        self.cost = cost
+        self.value = value
         self.weight = weight
 
     def use_item(self):
@@ -18,19 +28,21 @@ class Item(pygame.sprite.Sprite):
 
 class Weapon(Item):
 
-    def __init__(self, x, y, filename, quality, weight, damage, cost, damage_type):
-        super().__init__(x, y, filename, cost, weight)
+    def __init__(self, x, y, filename, quality, weight, damage, value, damage_type, hand):
+        super().__init__(x, y, filename, value, weight)
         self.quality = quality
         self.damage = damage
         self.damage_type = damage_type
+        self.hand = hand
 
 class Armour(Item):
 
-    def __init__(self, x, y, filename, quality, weight, armour, cost, resistance):
-        super().__init__(x, y, filename, cost, weight)
+    def __init__(self, x, y, filename, quality, weight, armour, value, resistance, body):
+        super().__init__(x, y, filename, value, weight)
         self.quality = quality
         self.armour = armour
         self.resistance = resistance
+        self.body = body
        
 
 
@@ -43,19 +55,21 @@ class Factory:
         weight = WEAPONS[weapon][WEIGHT]
         damage = WEAPONS[weapon][DAMAGE]
         damage_type = WEAPONS[weapon][DAMAGE_TYPE]
-        cost = WEAPONS[weapon][COST]
+        value = WEAPONS[weapon][VALUE]
+        hand = WEAPONS[weapon][HAND]
         filename = "{}{}".format(weapon,"01.png")
-        return Weapon(x, y, filename, quality, weight, damage, cost, damage_type)
+        return Weapon(x, y, filename, quality, weight, damage, value, damage_type, hand)
 
-    def create_armour(self):
-        armour = random.choice(list(ARMOUR))
-        quality = random.randint(1,ARMOUR[armour][QUALITY])
-        weight = ARMOUR[armour][WEIGHT]
-        armour = ARMOUR[armour][DAMAGE]
-        resistance = ARMOUR[armour][RESISTANCE]
-        cost = ARMOUR[armour][COST]
-        filename = "{}{}".format(weapon,"01.png")
-        return Armour(x, y, filename, quality, weight, armour, cost, resistance)
+    def create_armour(self, x, y):
+        armour = random.choice(list(ARMOURS))
+        quality = random.randint(1,ARMOURS[armour][QUALITY])
+        weight = ARMOURS[armour][WEIGHT]
+        defence = ARMOURS[armour][ARMOUR]
+        resistance = ARMOURS[armour][RESISTANCE]
+        value = ARMOURS[armour][VALUE]
+        body = ARMOURS[armour][BODY]
+        filename = "{}{}".format(armour,"01.png")
+        return Armour(x, y, filename, quality, weight, defence, value, resistance, body)
 
     def create_loot(self):
         pass

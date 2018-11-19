@@ -1,11 +1,21 @@
+"""
+Camera.py
+
+This handles the game's camera view and enables scrolling. The camera determines
+the x and y offsets of a sprite and returns the offset coordinates.
+
+The update method ensures the sprite is in the center of the map or fixes the
+coordinates based on the side of the game map.
+"""
+
 import pygame as pygame
 from Constants import *
 
 class Camera:
 
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    def __init__(self, map_width, map_height):
+        self.width = map_width
+        self.height = map_height
         self.camera = pygame.Rect(0, 0, WIDTH, HEIGHT)
 
     def offset(self, sprite):

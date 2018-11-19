@@ -1,5 +1,8 @@
-from Constants import *
-import pygame as pygame
+"""
+Tiles.py
+
+This file defines all of the relevant tile classes as simple pygame rectangles.
+"""
 from Textures import *
 
 class Tiles(pygame.sprite.Rect):
