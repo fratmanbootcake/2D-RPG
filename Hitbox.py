@@ -1,3 +1,13 @@
+"""
+Hitbox.py
+
+This creates the Hitbox class. The class remembers who spawned it to allow
+attacker stats to be used in the subsequent damage calls.
+
+The update runs a collision detection, excluding the sprite that spawned it, and
+when a collision occurs, the colliding sprites damage function is called.
+"""
+
 import pygame as pygame
 from Camera import *
 from Constants import *
@@ -43,8 +53,8 @@ class Hitbox(pygame.sprite.Sprite):
 
     def collision(self):
         hitbox_rect = pygame.Rect(self.x + self.vx * self.game.dt, self.y + self.vy * self.game.dt, self.width, self.height)
-        for sprite in self.game.all_sprites:
-            if sprite not in self.game.hitboxes and sprite != self.attacker:
+        for sprite in self.game.characters:
+            if sprite != self.attacker:
                 sprite_rect = pygame.Rect(sprite.x + int(TILE/4) + sprite.vx * self.game.dt, sprite.y + int(TILE/4) + sprite.vy * self.game.dt, sprite.rect.width, sprite.rect.height)
                 if hitbox_rect.colliderect(sprite_rect):
                     self.kill()

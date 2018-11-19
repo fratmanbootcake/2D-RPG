@@ -1,3 +1,12 @@
+"""
+Map.py
+
+This contains the Map class. This loads a map via reading in a text file and
+assigning the relevant tiles to the Game class's tiles. It also adds the
+sprites into the appropiate group from Game class. It also appends the walls
+into the Game class's wall list.
+"""
+
 from os import path
 from Constants import *
 from Tiles import *
@@ -68,7 +77,7 @@ class Map:
                     self.game.tiles.append(Door(self.game, i, j))
 
     def add_sprites(self):
-        #loads sprites and hitboxes
+        #loads sprites and walls
         for j, row in enumerate(self.data):
             for i, column in enumerate(row):
                 if self.data[j][i] in ['2','4','5','t','a','b','c','n','m','l','e','j','g','B','D']:
@@ -87,6 +96,11 @@ class Map:
                 elif self.data[j][i] == 'S':
                     item = Factory().create_weapon(i,j)
                     self.game.items.add(item)
+                    self.game.all_sprites.add(item)
+                elif self.data[j][i] == 'A':
+                    item = Factory().create_armour(i,j)
+                    self.game.items.add(item)
+                    self.game.all_sprites.add(item)
 
 
 

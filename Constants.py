@@ -1,3 +1,10 @@
+"""
+Constants.py
+
+This contains all of the constants that are used in the game. It also defines
+the relevant stats for each item.
+"""
+
 import os
 
 WIDTH = 320
@@ -25,47 +32,59 @@ PLATE = 'plate'
 QUALITY = 'quality'
 WEIGHT = 'weight'
 DAMAGE = 'damage'
-COST = 'cost'
+VALUE = 'value'
 DAMAGE_TYPE = 'damage type'
 RESISTANCE = 'resistance'
 ARMOUR = 'armour'
 SLASHING = 'slashing'
 CRUSHING = 'crushing'
 PIERCING = 'piercing'
+LEFT_HAND = 'left hand'
+RIGHT_HAND = 'right hand'
+HAND = 'hand'
+HEAD = 'head'
+BODY = 'body'
+TORSO = 'torso'
 
 
 WEAPONS = {SWORD:{QUALITY:2,
                  WEIGHT:5,
                  DAMAGE_TYPE:SLASHING,
+                 HAND:RIGHT_HAND,
                  DAMAGE:8,
-                 COST:20},
+                 VALUE:20},
            AXE:{QUALITY:2,
                WEIGHT:3,
                DAMAGE_TYPE:SLASHING,
+               HAND:RIGHT_HAND,
                DAMAGE:6,
-               COST:10},
+               VALUE:10},
            BATTLEAXE:{QUALITY:1,
                WEIGHT:10,
                DAMAGE_TYPE:SLASHING,
+               HAND:RIGHT_HAND,
                DAMAGE:10,
-               COST:15}
+               VALUE:15}
     }
 
-ARMOUR = {LEATHER:{QUALITY:2,
+ARMOURS = {LEATHER:{QUALITY:2,
                  WEIGHT:25,
-                 RESISTANCE:SLASHING,
                  ARMOUR:3,
-                 COST:15},
+                 RESISTANCE:SLASHING,
+                 BODY:TORSO,
+                 VALUE:15},
            CHAINMAIL:{QUALITY:2,
                WEIGHT:3,
                RESISTANCE:SLASHING,
+               BODY:TORSO,
                ARMOUR:6,
-               COST:100},
+               VALUE:100},
            PLATE:{QUALITY:1,
                WEIGHT:10,
                RESISTANCE:SLASHING,
+               BODY:TORSO,
                ARMOUR:10,
-               COST:1500}
+               VALUE:1500}
     }
 
 WHITE = (255, 255, 255)

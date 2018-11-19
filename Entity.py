@@ -1,3 +1,14 @@
+"""
+Entity.py
+
+This contains the base class for players, monsters and npcs. It contains the
+images, position, velocities, facing and various timers. Also included are
+collision methods, position reset methods, an attack method, a method to check
+whether it's alive, a health bar update method, a rebound method and a take
+damage method. The update method is left blank as it is overwritten in the
+daughter classes.
+"""
+
 from Constants import *
 from Hitbox import *
 import pygame as pygame
@@ -115,7 +126,7 @@ class Entity(pygame.sprite.Sprite):
             self.attack_timer -= self.attack_duration
             hit = Hitbox(self, self.game, vx, vy)
             self.game.hitboxes.add(hit)
-            self.game.all_sprites.add(hit)
+            self.game.sprite_manager.active_sprites.add(hit)
 
     def hit_connect(self, sprite):
         if randint(1,20) + self.strength > sprite.armour:

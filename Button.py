@@ -1,12 +1,16 @@
+"""
+Button.py
+
+This creates a surface at location x, y.
+"""
+
 from Constants import *
 import pygame as pygame
 
-class Button(pygame.sprite.Sprite):
+class Button:
 
-    def __init__(self, game, x, y, text):
-        self.game = game
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, x, y, surface):
         self.x = x
         self.y = y
-        self.text = text
+        self.surface = surface
 
