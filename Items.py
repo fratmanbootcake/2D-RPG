@@ -28,12 +28,13 @@ class Item(pygame.sprite.Sprite):
 
 class Weapon(Item):
 
-    def __init__(self, x, y, filename, quality, weight, damage, value, damage_type, hand):
+    def __init__(self, x, y, filename, quality, weight, damage, value, damage_type, hand, max_range):
         super().__init__(x, y, filename, value, weight)
         self.quality = quality
         self.damage = damage
         self.damage_type = damage_type
         self.hand = hand
+        self.max_range = max_range
 
 class Armour(Item):
 
@@ -44,7 +45,6 @@ class Armour(Item):
         self.resistance = resistance
         self.body = body
        
-
 
         
 class Factory:
@@ -57,8 +57,9 @@ class Factory:
         damage_type = WEAPONS[weapon][DAMAGE_TYPE]
         value = WEAPONS[weapon][VALUE]
         hand = WEAPONS[weapon][HAND]
+        max_range = WEAPONS[weapon][MAX_RANGE]
         filename = "{}{}".format(weapon,"01.png")
-        return Weapon(x, y, filename, quality, weight, damage, value, damage_type, hand)
+        return Weapon(x, y, filename, quality, weight, damage, value, damage_type, hand, max_range)
 
     def create_armour(self, x, y):
         armour = random.choice(list(ARMOURS))
@@ -73,5 +74,6 @@ class Factory:
 
     def create_loot(self):
         pass
+
 
    

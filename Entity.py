@@ -20,7 +20,6 @@ class Entity(pygame.sprite.Sprite):
         self.game = game
         pygame.sprite.Sprite.__init__(self)
         self.images = []
-        self.attacking_images = []
         self.animation_index = 0
         self.load_images()
         self.rect = self.image.get_rect()
@@ -38,6 +37,8 @@ class Entity(pygame.sprite.Sprite):
         self.max_hp = self.hp
         self.armour = 10
         self.strength = 2
+        self.vitality = VITALITY
+        self.agilty = AGILITY
 
     def health_bar_update(self):
         self.bar = pygame.Surface((TILE, 2))
@@ -107,12 +108,14 @@ class Entity(pygame.sprite.Sprite):
         self.x = self.x + self.vx * self.game.dt
         self.y = self.y + self.vy * self.game.dt
 
-    def damage(self, attacker):
-        self.hp -= randint(1, 8) + attacker.strength        
+    def damage(self, damage):
+        self.hp -= damage        
 
-    def attack(self, dt, vx, vy):
+    def attack(self, dt):
         # determine the kind of weapon the entity has equipped, then determine the hitbox velocity based on that
-        if vx != 0 or vy != 0:
+        if not self.hand or self.hand.max_range == 0:
+            vx, vy = 0, 0
+        else:
             if self.facing == NORTH:
                 vx, vy = 0, -2*PLAYER_SPEED
             elif self.facing == SOUTH:
@@ -121,26 +124,44 @@ class Entity(pygame.sprite.Sprite):
                 vx, vy = 2*PLAYER_SPEED, 0
             elif self.facing == WEST:
                 vx, vy = -2*PLAYER_SPEED, 0
+                
         self.attack_timer += dt
         while self.attack_timer >= self.attack_duration:
             self.attack_timer -= self.attack_duration
-            hit = Hitbox(self, self.game, vx, vy)
-            self.game.hitboxes.add(hit)
-            self.game.sprite_manager.active_sprites.add(hit)
+            Hitbox(self, self.game, vx, vy)
 
-    def hit_connect(self, sprite):
-        if randint(1,20) + self.strength > sprite.armour:
-            return True
+    def rebound(self, attacker_facing):
+        #determine the direction the sprite will be rebounded and determine
+        #the new x,y coordinates
+        if attacker_facing == NORTH:
+            new_y = self.y - TILE
+            new_x = self.x
+        elif attacker_facing == SOUTH:
+            new_y = self.y + TILE
+            new_x = self.x
+        elif attacker_facing == WEST:
+            new_x = self.x - TILE
+            new_y = self.y
+        elif attacker_facing == EAST:
+            new_x = self.x + TILE
+            new_y = self.y
 
-    def rebound(self, attacker):
-        if attacker.facing == NORTH:
-            self.y -= TILE
-        elif attacker.facing == SOUTH:
-            self.y += TILE
-        elif attacker.facing == WEST:
-            self.x -= TILE
-        elif attacker.facing == EAST:
-            self.x += TILE
+        #check for potential collisions and if one is encountered, reset the 
+        for wall in self.game.walls:
+            if pygame.Rect(new_x, new_y, TILE, TILE).colliderect(wall.rect):
+                if attacker_facing == NORTH:
+                    new_y = wall.y + TILE
+                elif attacker_facing == SOUTH:
+                    new_y = wall.y - TILE
+                elif attacker_facing == WEST:
+                    new_x = wall.x + TILE
+                elif attacker_facing == EAST:
+                    new_x = wall.x - TILE
+                
+        self.x = new_x
+        self.y = new_y
+                    
+        
 
     def is_alive(self):
         if self.hp > 0:
