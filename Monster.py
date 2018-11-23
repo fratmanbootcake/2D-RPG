@@ -15,6 +15,8 @@ class Monster(Entity):
 
     def __init__(self, game, x, y):
         super().__init__(game, x, y)
+        self.exp = 200
+        self.path = []
 
     def load_images(self):
         self.images = SKELETON
@@ -22,9 +24,10 @@ class Monster(Entity):
         self.image = self.images[0]
 
     def try_move(self):
-        pass
-        #self.vx = PLAYER_SPEED/2
-        # until pathfinding is implemented
+        target = (self.game.player.x, self.game.player.y)
+        start = (self.x, self.y)
+        
+            
 
     def update(self):
         self.try_move()

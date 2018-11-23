@@ -11,13 +11,17 @@ when a collision occurs, the colliding sprites damage function is called.
 import pygame as pygame
 from Camera import *
 from Constants import *
+from random import randint
 
 class Hitbox(pygame.sprite.Sprite):
 
-    def __init__(self, attacker, game, vx = 0, vy = 0):
+    def __init__(self, attacker, game, vx, vy):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
+        self.game.hitboxes.add(self)
+        self.game.sprite_manager.active_sprites.add(self)
         self.attacker = attacker
+        self.attacker_facing = self.attacker.facing
         self.get_orientation()
         self.get_position()
         self.image = pygame.Surface((self.width, self.height))
@@ -27,7 +31,7 @@ class Hitbox(pygame.sprite.Sprite):
         self.vy = vy
         self.timer = 0
         self.duration = 50/1000
-        self.range = 8*TILE
+        self.set_range()
 
     def get_position(self):
         if self.attacker.facing == NORTH:
@@ -60,34 +64,57 @@ class Hitbox(pygame.sprite.Sprite):
                     self.kill()
                     return sprite
 
+    def collides_with_walls(self):
+        new_x = self.x + self.vx * self.game.dt
+        new_y = self.y + self.vy * self.game.dt
+        for wall in self.game.walls:
+            if pygame.Rect(new_x, new_y, TILE, TILE).colliderect(pygame.Rect(wall.rect.centerx, wall.rect.centery,2,2)):
+                self.kill()
+
+    def set_range(self):
+        if self.vx > 0 or self.vy > 0:
+            self.range = self.attacker.hand.max_range
+
     def move(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
-        self.range -= 0
         if self.vx != 0:
             self.range -= self.vx * self.game.dt
         elif self.vy != 0:
             self.range -= self.vy * self.game.dt
 
-    def destruct(self):
+    def stop(self):
         if self.range <= 0:
             self.vy = 0
             self.vx = 0
 
+    def get_damage(self):
+        if not self.attacker.hand:
+            return randint(1,2) + self.attacker.strength
+        else:
+            return randint(1,self.attacker.hand.damage) + self.attacker.strength
+
+    def hit_connect(self, sprite):
+        if randint(1,20) + self.attacker.strength > sprite.armour:
+            return True
+
     def update(self):
         self.move()
+        self.collides_with_walls()
         sprite = self.collision()
         if self.collision():
-            if self.attacker.hit_connect(sprite):
-                sprite.damage(self.attacker)
-                sprite.rebound(self.attacker)
+            if self.hit_connect(sprite):
+                sprite.rebound(self.attacker_facing)
+                sprite.damage(self.get_damage())
+                if not sprite.is_alive() and self.attacker == self.game.player:
+                    self.game.player.exp += sprite.exp
         if self.vy == 0 and self.vx == 0:
             self.timer += self.game.dt
             while self.timer > self.duration:
                 self.timer -= self.duration
                 self.kill()
         else:
-            self.destruct()
+            self.stop()
 
 
     
