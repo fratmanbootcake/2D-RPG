@@ -74,6 +74,8 @@ class Hitbox(pygame.sprite.Sprite):
     def set_range(self):
         if self.vx > 0 or self.vy > 0:
             self.range = self.attacker.hand.max_range
+        else:
+            self.range = 0
 
     def move(self):
         self.x += self.vx * self.game.dt

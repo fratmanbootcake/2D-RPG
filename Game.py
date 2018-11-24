@@ -271,7 +271,7 @@ class Game:
         self.playing = True
 
         #enter the game loop
-        while self.playing:
+        while self.player.is_alive() and self.playing:
             self.show_fps = self.font.render(str(int(self.clock.get_fps())), True, WHITE)
             self.clock.tick(self.fps)
             self.dt = self.clock.tick(self.fps) / 1000
@@ -288,6 +288,9 @@ class Game:
                 self.Renderer.draw_inventory()
             elif self.state == CHARACTER_SCREEN:
                 self.Renderer.draw_character_screen()
+        
+        if not self.player.is_alive():
+            self.Renderer.draw_game_over()
 
 game = Game()
 game.game_loop()

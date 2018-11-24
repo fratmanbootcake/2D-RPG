@@ -62,6 +62,17 @@ class Renderer:
     def draw_character_creation(self):
         pass
 
+    def draw_game_over(self):
+        blank_screen = self.game.sprite_manager.background
+        blank_screen.fill(BLACK)
+        GAME_OVER = self.write_text("GAME OVER")
+        self.game.screen.blit(blank_screen, (0,0))
+        self.game.screen.blit(GAME_OVER, (int((self.game.width - GAME_OVER.get_size()[0])/2), int((self.game.height - GAME_OVER.get_size()[1])/2)))
+        pygame.display.flip()
+        
+                  
+        pygame.display.flip()
+
     def write_text(self, string):
         #takes a string and turns it into a pygame surface
         return self.game.font.render(string, True, BLUE)
