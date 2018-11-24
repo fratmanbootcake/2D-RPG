@@ -125,7 +125,7 @@ class Map:
 
         #begin loop which ends after the target has been found or no path exists
         while len(open_list)>0:
-            print(len(open_list))
+
             #prioritise the open list by lowest f value and
             #make the lowest the current node. Add the current node to the
             #closed list and remove it from the open list
