@@ -54,6 +54,7 @@ class Player(Entity):
         elif keys[pygame.K_s]:
             self.vy = PLAYER_SPEED
 
+
     def move(self):
         #update the players position
         self.x = int(self.x + self.vx * self.game.dt)

@@ -14,6 +14,7 @@ from Walls import *
 from Player import *
 from Monster import *
 from Items import *
+from Helper import *
 from random import choice
 from operator import attrgetter
 
@@ -124,7 +125,7 @@ class Map:
 
         #begin loop which ends after the target has been found or no path exists
         while len(open_list)>0:
-            
+            print(len(open_list))
             #prioritise the open list by lowest f value and
             #make the lowest the current node. Add the current node to the
             #closed list and remove it from the open list
@@ -146,17 +147,17 @@ class Map:
 
             #generate the children of the current node
             children = []
-            for new_position in [(1,0),(0,1),(-1,0),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]:
-
+            for new_position in [(1,0),(0,1),(-1,0),(0,-1)]:
+            #,(1,1),(1,-1),(-1,1),(-1,-1)
                 #get node position
                 node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
                 #check if the node position is within the map limits and ignore if it is not
                 if node_position[0] > (len(data[0])-1) or node_position[0] < 0 or node_position[1] > (len(data)-1) or node_position[1] < 0:
                     continue
-
+                
                 #check if the node is walkable and ignore if it is not
-                if data[node_position[0]][node_position[1]] != '.':
+                if data[node_position[1]][node_position[0]] not in ['.','p','M','S','A']:
                     continue
 
                 #create new node at node_position and give it the current node as its
@@ -194,7 +195,30 @@ class Map:
                 #open_list.append(child)
                 open_list.append(child)
 
+    def get_chunk(self, sprite):
+        """This get a 16x16 grid centered on the start point to be used in pathfinding. Next step is to impletment
+            variable distances to allow different monsters to track the player over different areas.
+        """
 
+        #initialize chunk list
+        chunk = []
+
+        #get the start positions grid location rounded to the nearest tile node
+        start = (number_round(sprite.x,TILE)/TILE,number_round(sprite.y,TILE)/TILE)
+    
+        #cut down the list to show only the relevant chunk
+        for j, row in enumerate(self.data):
+            if j <= start[1] - sprite.range or j >= start[1] + sprite.range:
+                    continue
+            chunk.append([])
+            for i, column in enumerate(row):
+                    if i <= start[0] - sprite.range or i >= start[0] + sprite.range:
+                            continue
+                    chunk[len(chunk)-1].append(column)
+
+        return chunk
+        
+        
 
 class Node:
 
