@@ -144,10 +144,15 @@ game_folder = os.path.dirname(__file__)
 image_folder = os.path.join(game_folder, "images")
 
 #define player-related constants and states
-PLAYER_SPEED = 160
+PLAYER_SPEED = 120
 WALKING = 'WALKING'
 STANDING = 'STANDING'
 ATTACKING = 'ATTACKING'
+
+#define monster states
+IDLE = 'IDLE'
+HUNTING = 'HUNTING'
+SLEEP = 'SLEEP'
 
 #define the directions/facing
 NORTH = 'NORTH'
